@@ -26,12 +26,12 @@ public class AccountController {
     private AccountView accountView;
     
     public AccountController(AccountServiceLayer accountServiceLayer, 
-            UserServiceLayer userServiceLayer, 
-            AddressServiceLayer addressServiceLayer, 
+           // UserServiceLayer userServiceLayer, 
+            //AddressServiceLayer addressServiceLayer, 
             AccountView accountView) {
         this.accountServiceLayer = accountServiceLayer;
-        this.userServiceLayer = userServiceLayer;
-        this.addressServiceLayer = addressServiceLayer;
+        //this.userServiceLayer = userServiceLayer;
+        //this.addressServiceLayer = addressServiceLayer;
         this.accountView = accountView;
     }
     
@@ -45,19 +45,19 @@ public class AccountController {
                     case 1:
                         addAccount();
                         break;
+//                    case 2:
+//                        deleteAccount();
+//                        break;
+//                    case 3:
+//                        System.out.println("Implementation in progress");
+//                        break;
                     case 2:
-                        deleteAccount();
-                        break;
-                    case 3:
-                        System.out.println("Implementation in progress");
-                        break;
-                    case 4:
                         viewAccount();
                         break;
-                    case 5:
+                    case 3:
                         listAccounts();
                         break;
-                    case 6:
+                    case 4:
                         keepGoing = false;
                         break;
                     default:
@@ -76,13 +76,13 @@ public class AccountController {
     
     private void addAccount() throws AccountPersistenceException {
         accountView.displayAddAccountBanner();
-        Address address = accountView.getNewAddressInfo();
-        addressServiceLayer.addAddress(address);
-        User user = accountView.getNewUserInfo();
-        user.setAddressId(address.getAddressId());
-        userServiceLayer.addUser(user);
+//        Address address = accountView.getNewAddressInfo();
+//        addressServiceLayer.addAddress(address);
+//        User user = accountView.getNewUserInfo();
+//        user.setAddressId(address.getAddressId());
+//        userServiceLayer.addUser(user);
         Account account = accountView.getNewAccountInfo();
-        account.setUserId(user.getUserId());
+        //account.setUserId(user.getUserId());
         accountServiceLayer.addAccount(account);
     }
     
@@ -100,17 +100,17 @@ public class AccountController {
         accountView.displayViewAccountBanner();
         int accountId = accountView.getAccountIdSelection();
         Account account = accountServiceLayer.getAccountByAccountId(accountId);
-        User user = userServiceLayer.getUserByUserId(account.getUserId());
-        Address address = addressServiceLayer.getAddressByAddressId(user.getAddressId());
-        accountView.displayAccount(account, user, address);
+//        User user = userServiceLayer.getUserByUserId(account.getUserId());
+//        Address address = addressServiceLayer.getAddressByAddressId(user.getAddressId());
+        accountView.displayAccount(account);
     }
     
     public void listAccounts() throws AccountPersistenceException {
         accountView.displayAllAccountsBanner();
         for (Account account : accountServiceLayer.getAllAccounts()) {
-            User user = userServiceLayer.getUserByUserId(account.getUserId());
-            Address address = addressServiceLayer.getAddressByAddressId(user.getAddressId());
-            accountView.displayAccount(account, user, address);
+//            User user = userServiceLayer.getUserByUserId(account.getUserId());
+//            Address address = addressServiceLayer.getAddressByAddressId(user.getAddressId());
+            accountView.displayAccount(account);
         }
     }
     

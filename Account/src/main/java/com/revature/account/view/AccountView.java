@@ -25,17 +25,19 @@ public class AccountView {
     public int printMainMenuAndGetSelection() {
         io.print("=== Main Menu ===");
         io.print("\t1 = Add Account");
-        io.print("\t2 = Delete Account");
-        io.print("\t3 = Update Account");
-        io.print("\t4 = View Account");
-        io.print("\t5 = List Accounts");
-        io.print("\t6 = Exit");
-        return io.readInt("Select from the above choices.", 1, 6);
+        //io.print("\t2 = Delete Account");
+        //io.print("\t3 = Update Account");
+        io.print("\t2 = View Account");
+        io.print("\t3 = List Accounts");
+        io.print("\t4 = Exit");
+        return io.readInt("Select from the above choices.", 1, 5);
     }
     
     public Account getNewAccountInfo() {
         Account account = new Account();
         account.setAccountBalance(io.readBigDecimal("Enter your initial balance:", BigDecimal.ZERO));
+        account.setFirstName(io.readString("Enter your first name:"));
+        account.setLastName(io.readString("Enter your last name:"));
         return account;
     }
     
@@ -59,7 +61,16 @@ public class AccountView {
         return io.readInt("Enter the account id:");
     }
     
+    public void displayAccount(Account account) {
+        System.out.println("Account Id: " + account.getAccountId());
+        io.print("Balance: " + account.getAccountBalance().toString());
+        io.print("First Name: " + account.getFirstName());
+        io.print("Last Name: " + account.getLastName());
+        io.print("");
+    }
+    
     public void displayAccount(Account account, User user, Address address) {
+        System.out.println("Account Id: " + account.getAccountId());
         io.print(user.getFirstName() + " " + user.getLastName());
         io.print(address.getStreet());
         io.print(address.getCity() + ", " + address.getState());

@@ -1,0 +1,41 @@
+
+CREATE TABLE ACCOUNT (
+    account_id INTEGER PRIMARY KEY,
+    account_balance VARCHAR2(10),
+    user_id INTEGER NOT NULL
+);
+
+CREATE TABLE USER (
+    user_id INTEGER PRIMARY KEY,
+    first_name VARCHAR2(20),
+    last_name VARCHAR2(20),
+    address_id INTEGER
+);
+
+CREATE TABLE ADDRESS (
+    address_id INTEGER PRIMARY KEY,
+    street VARCHAR2(20),
+    city VARCHAR2(20),
+    state VARCHAR2(20),
+    zip VARCHAR2(5)
+);
+
+ALTER TABLE ACCOUNT ADD CONSTRAINT FK_user_id
+FOREIGN KEY (user_id)
+REFERENCES account_user (user_id);
+
+ALTER TABLE USER ADD CONSTRAINT FK_address_id
+FOREIGN KEY (address_id)
+REFERENCES account_address (address_id);
+
+-- Sequence
+CREATE SEQUENCE SQ_ACCOUNT_PK START WITH 1 INCREMENT BY 1;
+
+-- Trigger (before insert, use sequence)
+CREATE OR REPLACE TRIGGER TR_INSERT_ACCOUNT
+BEFORE INSERT ON ACCOUNT
+FOR EACH ROW
+BEGIN
+    SELECT SQ_ACCOUNT_PK.NEXTVAL INTO :NEW.account_id FROM DUAL;
+END;
+/
