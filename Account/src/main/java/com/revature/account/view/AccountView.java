@@ -25,11 +25,11 @@ public class AccountView {
     public int printMainMenuAndGetSelection() {
         io.print("=== Main Menu ===");
         io.print("\t1 = Add Account");
-        //io.print("\t2 = Delete Account");
+        io.print("\t2 = Delete Account");
         //io.print("\t3 = Update Account");
-        io.print("\t2 = View Account");
-        io.print("\t3 = List Accounts");
-        io.print("\t4 = Exit");
+        io.print("\t3 = View Account");
+        io.print("\t4 = List Accounts");
+        io.print("\t5 = Exit");
         return io.readInt("Select from the above choices.", 1, 5);
     }
     

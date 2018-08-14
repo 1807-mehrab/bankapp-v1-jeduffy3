@@ -5,6 +5,7 @@ CREATE TABLE account (
     last_name VARCHAR2(20)
 );
 
+SELECT * FROM ACCOUNT;
 /*
 CREATE TABLE account_user (
     user_id INTEGER PRIMARY KEY,
@@ -77,5 +78,6 @@ INSERT INTO account (account_id, account_balance, first_name, last_name)
 VALUES (2, '150.00', 'John', 'Doe');
 
 SELECT * FROM ACCOUNT;
+
 
 COMMIT;

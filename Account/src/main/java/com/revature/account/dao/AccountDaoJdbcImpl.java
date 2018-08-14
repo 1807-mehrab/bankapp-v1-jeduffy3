@@ -23,43 +23,69 @@ import oracle.net.aso.e;
  */
 public class AccountDaoJdbcImpl implements AccountDao {
 
+    private static final String SQL_INSERT_ACCOUNT 
+            = "INSERT INTO account (account_balance, first_name, last_name) "
+            + "VALUES (?, ?, ?)";
+    
+    private static final String SQL_DELETE_ACCOUNT 
+            = "DELETE FROM account WHERE account_id = ?";
+    
+    private static final String SQL_SELECT_ACCOUNT_BY_ACCOUNT_ID 
+            = "SELECT * FROM account WHERE account_id = ?";
+    
+    private static final String SQL_SELECT_ALL_ACCOUNTS 
+            = "SELECT * FROM account";
+    
     @Override
     public void addAccount(Account account) throws AccountPersistenceException {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String balance = account.getAccountBalance().toString();
-        String firstName = account.getFirstName();
-        String lastName = account.getLastName();
-        
+
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO ACCOUNT (account_balance, first_name, last_name) VALUES (?,?,?)";
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, balance);
-            ps.setString(2, firstName);
-            ps.setString(3, lastName);
+            ps = conn.prepareStatement(SQL_INSERT_ACCOUNT);
+            ps.setString(1, account.getAccountBalance().toString());
+            ps.setString(2, account.getFirstName());
+            ps.setString(3, account.getLastName());
             rs = ps.executeQuery();
-        } catch (SQLException e) {
-            throw new AccountPersistenceException("Could not save file.", e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             throw new AccountPersistenceException("Could not save file.", e);
         } finally {
             try {
                 if (ps != null) {
                     ps.close();
                 }
-                
                 if (rs != null) {
                     rs.close();
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            } catch (SQLException e) {
+                throw new AccountPersistenceException("Could not save file.", e);
             }
         }
     }
 
     @Override
     public void deleteAccount(int accountId) throws AccountPersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            ps = conn.prepareStatement(SQL_DELETE_ACCOUNT);
+            ps.setInt(1, accountId);
+            rs = ps.executeQuery();
+        } catch (Exception e) {
+            throw new AccountPersistenceException("Could not load file.", e);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                throw new AccountPersistenceException("Could not load file.", e);
+            }
+        }
     }
 
     @Override
@@ -73,23 +99,15 @@ public class AccountDaoJdbcImpl implements AccountDao {
         Account account = null;
         ResultSet rs = null;
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?";
-            ps = conn.prepareStatement(sql);
+            ps = conn.prepareStatement(SQL_SELECT_ACCOUNT_BY_ACCOUNT_ID);
             ps.setInt(1, accountId);
-            
             rs = ps.executeQuery();
-            
             while (rs.next()) {
-                int aid = rs.getInt("account_id");
-                String accountBalanceString = rs.getString("account_balance");
-                BigDecimal accountBalance = new BigDecimal(accountBalanceString);
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
                 account = new Account();
-                account.setAccountId(aid);
-                account.setAccountBalance(accountBalance);
-                account.setFirstName(firstName);
-                account.setLastName(lastName);
+                account.setAccountId(rs.getInt("account_id"));
+                account.setAccountBalance(new BigDecimal(rs.getString("account_balance")));
+                account.setFirstName(rs.getString("first_name"));
+                account.setLastName(rs.getString("last_name"));
             }
         } catch (Exception e) {
             throw new AccountPersistenceException("Could not load file.", e);
@@ -112,23 +130,18 @@ public class AccountDaoJdbcImpl implements AccountDao {
     public List<Account> getAllAccounts() throws AccountPersistenceException {
         PreparedStatement ps = null;
         Account account = null;
+        ResultSet rs = null;
         List<Account> accounts = new ArrayList<>();
+        
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM ACCOUNT";
-            ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            
+            ps = conn.prepareStatement(SQL_SELECT_ALL_ACCOUNTS);
+            rs = ps.executeQuery();
             while (rs.next()) {
-                int accountId = rs.getInt("account_id");
-                String accountBalanceString = rs.getString("account_balance");
-                BigDecimal accountBalance = new BigDecimal(accountBalanceString);
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
                 account = new Account();
-                account.setAccountId(accountId);
-                account.setAccountBalance(accountBalance);
-                account.setFirstName(firstName);
-                account.setLastName(lastName);
+                account.setAccountId(rs.getInt("account_id"));
+                account.setAccountBalance(new BigDecimal(rs.getString("account_balance")));
+                account.setFirstName(rs.getString("first_name"));
+                account.setLastName(rs.getString("last_name"));
                 accounts.add(account);
             }
             rs.close();
@@ -138,5 +151,5 @@ public class AccountDaoJdbcImpl implements AccountDao {
         }
         return accounts;
     }
-    
+
 }

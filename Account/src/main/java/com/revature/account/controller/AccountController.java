@@ -45,19 +45,19 @@ public class AccountController {
                     case 1:
                         addAccount();
                         break;
-//                    case 2:
-//                        deleteAccount();
-//                        break;
+                    case 2:
+                        deleteAccount();
+                        break;
 //                    case 3:
 //                        System.out.println("Implementation in progress");
 //                        break;
-                    case 2:
+                    case 3:
                         viewAccount();
                         break;
-                    case 3:
+                    case 4:
                         listAccounts();
                         break;
-                    case 4:
+                    case 5:
                         keepGoing = false;
                         break;
                     default:
